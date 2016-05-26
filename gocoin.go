@@ -22,8 +22,11 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 	to := req.URL.Query()["to"];
 	from := req.URL.Query()["from"];
 	amount := req.URL.Query()["amt"];
+	if to[0] == "source_url" {
+		d.Write([]byte("github.com/justyntemme/cfetch\n"))
+	}
 	if to == nil {
-		d.Write([]byte("Error: see Help documents for request patterns"))
+		d.Write([]byte("Error: see Help documents for request patterns\n"))
 	}
 	if to != nil {
 		dataset1.to = to[0]
