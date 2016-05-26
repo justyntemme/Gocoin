@@ -29,7 +29,7 @@ type data struct {
 
 func main() {
 	http.HandleFunc("/", serveResponse)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":80", nil)
 }
 
 func serveResponse(d http.ResponseWriter, req *http.Request) {
