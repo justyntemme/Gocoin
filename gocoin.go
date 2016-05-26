@@ -57,6 +57,7 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 func sendrequest(ds1 data) string {
 	var request string
 	request += ("-a " + ds1.api + " " + ds1.amount + " " + ds1.from + " " + ds1.to)
+	fmt.Println(request)
 	conn, err := net.Dial("tcp", "localhost:8888")
 	fmt.Fprintf(conn, request)
 	response, err := bufio.NewReader(conn).ReadString('\n')
