@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 	"fmt"
+	"net"
+	"bufio"
 )
 type data struct {
 	to string
@@ -27,11 +29,19 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 		dataset1.to = to[0]
 		dataset1.from = from[0]
 		dataset1.amount = amount[0]
-		sendrequest(*dataset1)
+		d.Write([]byte(sendrequest(*dataset1)))
 	}
 }
 
-func sendrequest(ds1 data) {
+func sendrequest(ds1 data) string {
 	var request string
-	request += ("-a ccc " + ds1.from + " " + ds1.to + " " + ds1.amount)
+	request += ("-a ccc " + ds1.amount + " " + ds1.from + " " + ds1.to)
+	conn, err := net.Dial("tcp", "localhost:8888")
+	fmt.Fprintf(conn, request)
+	response, err := bufio.NewReader(conn).ReadString('\n')
+	if err == nil {
+		fmt.Println(response)
+		return(response)
+	}
+	return("ERROR")
 }
