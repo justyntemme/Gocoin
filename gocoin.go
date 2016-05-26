@@ -25,6 +25,7 @@ type data struct {
 	to string
 	from string
 	amount string
+	api string
 }
 
 func main() {
@@ -37,6 +38,7 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 	to := req.URL.Query()["to"];
 	from := req.URL.Query()["from"];
 	amount := req.URL.Query()["amt"];
+	api := req.URK.Query()["api"];
 	if to[0] == "source_url" {
 		d.Write([]byte("github.com/justyntemme/cfetch\n"))
 	}
@@ -47,13 +49,14 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 		dataset1.to = to[0]
 		dataset1.from = from[0]
 		dataset1.amount = amount[0]
+		dataset1.api = api[0]
 		d.Write([]byte(sendrequest(*dataset1)))
 	}
 }
 
 func sendrequest(ds1 data) string {
 	var request string
-	request += ("-a ccc " + ds1.amount + " " + ds1.from + " " + ds1.to)
+	request += ("-a " + ds1.api + " " + ds1.amount + " " + ds1.from + " " + ds1.to)
 	conn, err := net.Dial("tcp", "localhost:8888")
 	fmt.Fprintf(conn, request)
 	response, err := bufio.NewReader(conn).ReadString('\n')
