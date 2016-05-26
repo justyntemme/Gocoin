@@ -38,7 +38,7 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 	to := req.URL.Query()["to"];
 	from := req.URL.Query()["from"];
 	amount := req.URL.Query()["amt"];
-	api := req.URK.Query()["api"];
+	api := req.URL.Query()["api"];
 	if to[0] == "source_url" {
 		d.Write([]byte("github.com/justyntemme/cfetch\n"))
 	}
