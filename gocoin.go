@@ -56,7 +56,7 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 		fmt.Printf(sendrequest(*dataset1))
 		d.Write([]byte(sendrequest(*dataset1)))
 	}
-	if req.URL.Query()["source"] != nil && req.URL.Query()["help"] != nil && req.URL.Query()["to"] !=  nil {
+	if req.URL.Query()["source"] == nil && req.URL.Query()["help"] == nil && req.URL.Query()["to"] ==  nil {
 			d.Write([]byte("help=1 To see help page\n"))
 		}
 }
