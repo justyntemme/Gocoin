@@ -26,6 +26,8 @@ type data struct {
 	from string
 	amount string
 	api string
+	help int
+	source int
 }
 
 func main() {
@@ -35,21 +37,30 @@ func main() {
 
 func serveResponse(d http.ResponseWriter, req *http.Request) {
 	dataset1 := new(data)
+	dataset1.source=0
+	dataset1.help=0
 	to := req.URL.Query()["to"];
 	from := req.URL.Query()["from"];
 	amount := req.URL.Query()["amt"];
 	api := req.URL.Query()["api"];
-	if to[0] == "source_url" {
+	help := req.URL.Query()["help"];
+	source := req.URL.Query()["source"];
+	fmt.Println(to[0])
+	if source[0] == "1" {
 		d.Write([]byte("github.com/justyntemme/cfetch\n"))
 	}
-	if to == nil {
+	if help[0] == "1" {
+		d.Write([]byte("Help"))
+	}
+	if to[0] == "" {
 		d.Write([]byte("Error: see Help documents for request patterns\n"))
 	}
-	if to != nil {
+	if to[0] != "" {
 		dataset1.to = to[0]
 		dataset1.from = from[0]
 		dataset1.amount = amount[0]
 		dataset1.api = api[0]
+		fmt.Printf(sendrequest(*dataset1))
 		d.Write([]byte(sendrequest(*dataset1)))
 	}
 }
@@ -57,13 +68,14 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 func sendrequest(ds1 data) string {
 	var request string
 	request += ("-a " + ds1.api + " " + ds1.amount + " " + ds1.from + " " + ds1.to)
-	fmt.Println(request)
 	conn, err := net.Dial("tcp", "localhost:8888")
 	fmt.Fprintf(conn, request)
 	response, err := bufio.NewReader(conn).ReadString('\n')
+	fmt.Println(response)
 	if err == nil {
 		fmt.Println(response)
 		return(response)
 	}
-	return("ERROR")
+	fmt.Println(err.Error())
+	return(err.Error())
 }
