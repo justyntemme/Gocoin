@@ -1,4 +1,4 @@
-//  gocoin - Web socket API for interacting with the coinfetch python module 
+//  gocoin - Web socket API for interacting with the coinfetch python module
 //  Copyright (C) 2016 Justyn Temme
 //
 //  This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,18 @@
 package main
 
 import (
-	"net/http"
+	"bufio"
 	"fmt"
 	"net"
-	"bufio"
+	"net/http"
 )
+
 type data struct {
-	to string
-	from string
+	to     string
+	from   string
 	amount string
-	api string
-	help int
+	api    string
+	help   int
 	source int
 }
 
@@ -44,21 +45,20 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 		d.Write([]byte("<HELP PAGE> \n Params: to (target coin/currency) | from (coin/currency to convert) | amt (Amount of coin/currency to convert | api (Which coinfetch API to use) | help (1=show help) | source (1=Show source URL)\n"))
 	}
 	if req.URL.Query()["to"] != nil && req.URL.Query()["from"] != nil && req.URL.Query()["amt"] != nil && req.URL.Query()["api"] != nil {
-		to := req.URL.Query()["to"];
-		from := req.URL.Query()["from"];
-		amount := req.URL.Query()["amt"];
-		api := req.URL.Query()["api"];
+		to := req.URL.Query()["to"]
+		from := req.URL.Query()["from"]
+		amount := req.URL.Query()["amt"]
+		api := req.URL.Query()["api"]
 
 		dataset1.to = to[0]
 		dataset1.from = from[0]
 		dataset1.amount = amount[0]
 		dataset1.api = api[0]
-		fmt.Printf(sendrequest(*dataset1))
 		d.Write([]byte(sendrequest(*dataset1)))
 	}
-	if req.URL.Query()["source"] == nil && req.URL.Query()["help"] == nil && req.URL.Query()["to"] ==  nil {
-			d.Write([]byte("help=1 To see help page\n"))
-		}
+	if req.URL.Query()["source"] == nil && req.URL.Query()["help"] == nil && req.URL.Query()["to"] == nil {
+		d.Write([]byte("help=1 To see help page\n"))
+	}
 }
 
 func sendrequest(ds1 data) string {
@@ -70,8 +70,8 @@ func sendrequest(ds1 data) string {
 	fmt.Println(response)
 	if err == nil {
 		fmt.Println(response)
-		return(response)
+		return (response)
 	}
 	fmt.Println(err.Error())
-	return(err.Error())
+	return (err.Error())
 }
