@@ -39,23 +39,20 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 	dataset1 := new(data)
 	dataset1.source=0
 	dataset1.help=0
-	to := req.URL.Query()["to"];
-	from := req.URL.Query()["from"];
-	amount := req.URL.Query()["amt"];
-	api := req.URL.Query()["api"];
 	help := req.URL.Query()["help"];
 	source := req.URL.Query()["source"];
-	fmt.Println(to[0])
 	if source[0] == "1" {
 		d.Write([]byte("github.com/justyntemme/cfetch\n"))
 	}
 	if help[0] == "1" {
-		d.Write([]byte("Help"))
+		d.Write([]byte("<HELP PAGE> \n Params: to (target coin/currency) | from (coin/currency to convert) | amt (Amount of coin/currency to convert | api (Which coinfetch API to use) | help (1=show help) | source (1=Show source URL)\n"))
 	}
-	if to[0] == "" {
-		d.Write([]byte("Error: see Help documents for request patterns\n"))
-	}
-	if to[0] != "" {
+	if req.URL.Query()["to"][0] != "" && req.URL.Query()["from"][0] != "" && req.URL.Query()["amt"][0] != "" && req.URL.Query()["api"][0] != ""{
+		to := req.URL.Query()["to"];
+		from := req.URL.Query()["from"];
+		amount := req.URL.Query()["amt"];
+		api := req.URL.Query()["api"];
+
 		dataset1.to = to[0]
 		dataset1.from = from[0]
 		dataset1.amount = amount[0]
@@ -63,6 +60,9 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 		fmt.Printf(sendrequest(*dataset1))
 		d.Write([]byte(sendrequest(*dataset1)))
 	}
+	if source[0] == "" && help[0] == "" && req.URL.Query()["to"][0] == "" {
+			d.Write([]byte("help=1 To see help page\n"))
+		}
 }
 
 func sendrequest(ds1 data) string {
