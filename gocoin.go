@@ -32,22 +32,18 @@ type data struct {
 
 func main() {
 	http.HandleFunc("/", serveResponse)
-	http.ListenAndServe(":80", nil)
+	http.ListenAndServe(":88", nil)
 }
 
 func serveResponse(d http.ResponseWriter, req *http.Request) {
 	dataset1 := new(data)
-	dataset1.source=0
-	dataset1.help=0
-	help := req.URL.Query()["help"];
-	source := req.URL.Query()["source"];
-	if source[0] == "1" {
+	if req.URL.Query()["source"] != nil {
 		d.Write([]byte("github.com/justyntemme/cfetch\n"))
 	}
-	if help[0] == "1" {
+	if req.URL.Query()["help"] != nil {
 		d.Write([]byte("<HELP PAGE> \n Params: to (target coin/currency) | from (coin/currency to convert) | amt (Amount of coin/currency to convert | api (Which coinfetch API to use) | help (1=show help) | source (1=Show source URL)\n"))
 	}
-	if req.URL.Query()["to"][0] != "" && req.URL.Query()["from"][0] != "" && req.URL.Query()["amt"][0] != "" && req.URL.Query()["api"][0] != ""{
+	if req.URL.Query()["to"] != nil && req.URL.Query()["from"] != nil && req.URL.Query()["amt"] != nil && req.URL.Query()["api"] != nil {
 		to := req.URL.Query()["to"];
 		from := req.URL.Query()["from"];
 		amount := req.URL.Query()["amt"];
@@ -60,7 +56,7 @@ func serveResponse(d http.ResponseWriter, req *http.Request) {
 		fmt.Printf(sendrequest(*dataset1))
 		d.Write([]byte(sendrequest(*dataset1)))
 	}
-	if source[0] == "" && help[0] == "" && req.URL.Query()["to"][0] == "" {
+	if req.URL.Query()["source"] != nil && req.URL.Query()["help"] != nil && req.URL.Query()["to"] !=  nil {
 			d.Write([]byte("help=1 To see help page\n"))
 		}
 }
